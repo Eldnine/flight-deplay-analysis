@@ -22,13 +22,10 @@ def one_hot_encoding(df, non_categorical_cols):
     categorical_cols = []
     for col in filter(lambda p: p not in non_categorical_cols, df.columns):
         categorical_cols.append(col)
-    print(df['ORIGIN_AIRPORT'])
     dumdata = pandas.get_dummies(df[categorical_cols], drop_first=False)
     for col in non_categorical_cols:
         result[col] = df[col]
     for col in dumdata.columns:
-        print(col)
-
         result[col] = dumdata[col]
     return result
 
@@ -48,7 +45,7 @@ def main():
     non_categorical_cols = ['SCHEDULED_DEPARTURE', 'DEPARTURE_TIME', 'SCHEDULED_ARRIVAL', 'ARRIVAL_TIME']
 
     df_flights_raw = pandas.read_csv(csv_path_flights, dtype={'ORIGIN_AIRPORT': str, 'DESTINATION_AIRPORT': str})
-    df_flights_raw = sampling(df_flights_raw, 1000)
+    df_flights_raw = sampling(df_flights_raw, 10000)
     df_flights_raw = remove_nan(df_flights_raw, x_cols + y_col)
 
     df_x = get_selected_cols(df_flights_raw, x_cols)
