@@ -7,17 +7,16 @@ from sklearn.model_selection import KFold
 
 
 def main():
-    x_csv_file = 'flights_one_hot_x.csv'
-    y_csv_file = 'flights_one_hot_y.csv'
+    x_csv_file = 'flights_svm.csv'
     x_csv_path = '../data/{}'.format(x_csv_file)
-    y_csv_path = '../data/{}'.format(y_csv_file)
 
     df_x = pandas.read_csv(x_csv_path)
     df_x = df_x.drop(df_x.columns[[0]], axis=1)
+    df_y = df_x['ARRIVAL_DELAY']
+    df_x = df_x.drop(['ARRIVAL_DELAY'], axis=1)
+
     X = numpy.array(df_x)
-    df_y = pandas.read_csv(y_csv_path)
-    df_y = df_y.drop(df_y.columns[[0]], axis=1)
-    Y = numpy.array(df_y)
+    Y = numpy.array(df_y).ravel()
 
     msk = numpy.random.rand(len(X)) < 0.8
 
@@ -45,14 +44,15 @@ def main():
     # # [[1624    1]
     # #  [ 199   31]]
 
-    clf = svm.SVR()
+    clf = svm.SVC()
     clf.fit(train_x, train_y.ravel())
     predict = clf.predict(test_x)
 
-    print(accuracy_score(test_y.ravel(), predict))  # 0.89218328841
-    print(confusion_matrix(test_y.ravel(), predict))
-    # [[1624    1]
-    #  [ 199   31]]
+    # for one hot all attributes
+    print(accuracy_score(test_y, predict.round()))  # 0.821753986332574
+    print(confusion_matrix(test_y, predict.round()))
+    # [[1443    0]
+    #  [313    0]]
 
     kf = KFold(n_splits=3)
     for train, test in kf.split(X):
