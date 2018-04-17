@@ -3,6 +3,7 @@ from sklearn import preprocessing, svm
 from sklearn.metrics import accuracy_score
 from sklearn.metrics import confusion_matrix
 import numpy
+from sklearn.model_selection import KFold
 
 
 def main():
@@ -52,6 +53,11 @@ def main():
     print(confusion_matrix(test_y.ravel(), predict))
     # [[1624    1]
     #  [ 199   31]]
+
+    kf = KFold(n_splits=3)
+    for train, test in kf.split(X):
+        train_data = np.array(data)[train]
+        test_data = np.array(data)[test]
 
 if __name__ == '__main__':
     main()
