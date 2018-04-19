@@ -2,7 +2,7 @@ import pandas
 from sklearn import preprocessing, svm
 from sklearn.metrics import accuracy_score
 from sklearn.metrics import confusion_matrix
-import numpy
+import numpy as np
 from sklearn.model_selection import KFold
 
 
@@ -15,10 +15,12 @@ def main():
     df_y = df_x['ARRIVAL_DELAY']
     df_x = df_x.drop(['ARRIVAL_DELAY'], axis=1)
 
-    X = numpy.array(df_x)
-    Y = numpy.array(df_y).ravel()
+    print df_x.count
 
-    msk = numpy.random.rand(len(X)) < 0.8
+    X = np.array(df_x)
+    Y = np.array(df_y).ravel()
+
+    msk = np.random.rand(len(X)) < 0.8
 
     train_x = X[msk]
     train_y = Y[msk]
@@ -44,20 +46,30 @@ def main():
     # # [[1624    1]
     # #  [ 199   31]]
 
-    clf = svm.SVC()
+    # clf = svm.SVC()
+    # clf.fit(train_x, train_y.ravel())
+    # predict = clf.predict(test_x)
+    #
+    # # for one hot all attributes
+    # print(accuracy_score(test_y, predict.round()))  # 0.81161007667
+    # print(confusion_matrix(test_y, predict.round()))
+    # # [[1482    0]
+    # # [ 344    0]]
+
+    clf = svm.SVC(kernel='linear', C=1.0)
     clf.fit(train_x, train_y.ravel())
     predict = clf.predict(test_x)
 
     # for one hot all attributes
-    print(accuracy_score(test_y, predict.round()))  # 0.821753986332574
+    print(accuracy_score(test_y, predict.round()))  # 0.81161007667
     print(confusion_matrix(test_y, predict.round()))
-    # [[1443    0]
-    #  [313    0]]
+    # [[1482    0]
+    # [ 344    0]]
 
-    kf = KFold(n_splits=3)
-    for train, test in kf.split(X):
-        train_data = np.array(data)[train]
-        test_data = np.array(data)[test]
+    # kf = KFold(n_splits=3)
+    # for train, test in kf.split(df_x):
+    #     train_data = np.array(df_x)[train]
+    #     test_data = np.array(df_x)[test]
 
 if __name__ == '__main__':
     main()

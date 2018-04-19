@@ -64,13 +64,13 @@ def main():
 
     df_data = get_selected_cols(df_flights_raw, x_cols)
     df_data = map_time(df_data)
-    # df_data = one_hot_encoding(df_data)
+    df_data = one_hot_encoding(df_data)
 
     df_delay = get_selected_cols(df_flights_raw, y_col)
     df_delay = map_delay(df_delay)
 
     df_data['ARRIVAL_DELAY'] = df_delay['ARRIVAL_DELAY']
-    output_file_name = flights_file.split('.')[0] + '_svm_no_one_hot.csv'
+    output_file_name = flights_file.split('.')[0] + '_one_hot.csv'
     df_data.to_csv('../data/{}'.format(output_file_name), encoding='utf-8')
 
 if __name__ == '__main__':
